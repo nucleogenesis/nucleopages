@@ -1,0 +1,154 @@
+<!-- directives: [] -->
+<div id="content">
+  <ul>
+    <li>
+      <h1>Snackbars</h1>
+      <p>	  <b>Accessiblity Review</b>
+        <br />
+</p>
+    </li>
+    <li>
+      <h2>What is a Snackbar?</h2>
+      <ul>
+        <li>
+          <h3>In Kolibri / KDS</h3>
+          <ul>
+            <li checked="false">
+              <p>Let the user know that something happened following an action</p>
+            </li>
+            <li checked="false">
+              <p>Use for non-critical information (prefer modal / notification for critical)</p>
+            </li>
+            <li checked="false">
+              <p>Allow a user to take an action in response to the result of an action (ie, undo)</p>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <h3>Toasts == Banners == Notifications == ...</h3>
+          <ul>
+            <li checked="false">
+              <p>None of those that I researched have &quot;Snackbars&quot;</p>
+            </li>
+            <li checked="false">
+              <p>There were suggestions that were similar in nature, but they were always referred to as Banners, Toasts or Notifications</p>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <h3>Comparing to KDS</h3>
+          <ul>
+            <li>
+              <h4>UX Commonalities</h4>
+              <p>			  <b>Generally, our UX maps to most of the suggestions, examples:</b>
+                <br />
+</p>
+              <ul>
+                <li checked="false">
+                  <p>Actionable messages persist until interacted with</p>
+                </li>
+                <li checked="false">
+                  <p>Transient &quot;Toast&quot; messages should disappear automatically after a short time</p>
+                </li>
+                <li checked="false">
+                  <p>Placement is out of the way, but in a noticeable position</p>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <h4>UX Differences</h4>
+              <ul>
+                <li checked="false">
+                  <p>Some suggest allowing <img src="https:carbondesignsystem.com/b6d7413c91a2471a6b767731dc892b46/4_toast_736.gif" title="multiple toasts" /> at once</p>
+                </li>
+                <li checked="false">
+                  <p>Iconographic &amp; color-based states to differentiate between a success, warning, failure, etc.</p>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <h4>Banners</h4>
+              <ul>
+                <li checked="false">
+                  <p>I just wanted to note that this was a common alternative in the systems which did not have a similar component.</p>
+                </li>
+                <li checked="false">
+                  <p>The pattern here is currently being discussed in an open <a href="https:github.com/learningequality/kolibri/issues/10482#issuecomment-1526602437">GH Issue on Kolibri</a></p>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <h4>a11y Highlights</h4>
+              <ul>
+                <li>
+                  <h5>IBM Carbon</h5>
+                  <p>				  They had two references to WCAG 2.1 standards:
+                    <br />
+</p>
+                  <ul>
+                    <li><i>We do this</i>
+                      <p>					  <b>Don’t use notifications that dismiss on a timer for critical or emergency messages.</b> Some users with disabilities need more time to read or interact with messages and timed actionable toasts may not provide sufficient time. <a href="https:www.w3.org/WAI/WCAG21/Understanding/no-timing.html">WCAG 2.1 success criterion 2.2.4 (AAA)</a>
+                        <br />
+</p>
+                    </li>
+                    <li><i>We don&apos;t do this</i>
+                      <p>					  <b>Users should be able to manage or limit noncritical notifications.</b> This gives users the control to reduce the number of distractions or disruptions they receive, which is particularly helpful for users with cognitive limitations. <a href="https:www.w3.org/WAI/WCAG21/Understanding/interruptions.html">WCAG 2.1 success criterion 2.2.3 (AAA)</a>
+                        <br />
+</p>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <h5>Access Use</h5>
+                  <p>				  <i>We don&apos;t have any aria business in the snackbar</i>
+                    <br />
+</p>
+                  <ul>
+                    <li checked="false">
+                      <p>Name non-modal dialogs meaningfully. Refer to their visible heading via aria-labelledby, or provide an invisible name via aria-label.</p>
+                    </li>
+                    <li checked="false">
+                      <p>Label all dialog controls, including the close button. Each dialog should have a clearly labelled control for closing it. Icon-based buttons for closing [x] must have an accessible name that is read out to screen reader users.</p>
+                    </li>
+                    <li checked="false">
+                      <p>Use the correct ARIA roles. Use role=&quot;dialog&quot; and aria-modal=&quot;false&quot; on the dialog.</p>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <h5>General Thoughts</h5>
+                  <ul>
+                    <li checked="false">
+                      <p>Focus handling is also important for keyboard users - when a Snackbar steals focus, it needs to return the user to where they were</p>
+                    </li>
+                    <li checked="false">
+                      <p>Multiple Snackbars are generally said to be okay, stacking them vertically (but don&apos;t overdo it)</p>
+                    </li>
+                    <li checked="false">
+                      <p>Use <code>polite</code> to make screen-readers <i>aware</i> without stealing focus (aria-live =&gt; polite vs assertive) - polite lets the user know there is a notification, but doesn&apos;t steal focus, assertive will force the user to focus the notification</p>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <h2>Final Thoughts</h2>
+              <ul>
+                <li checked="false">
+                  <p>Snackbar lives in Kolibri, not KDS - should this change?</p>
+                </li>
+                <li checked="false">
+                  <p>We are aiming to implement a Banner similar to those noted in the design systems above, should bear these resources in mind</p>
+                </li>
+                <li checked="false">
+                  <p>Value of adding stacked Snackbars vs queuing them (which, is what KDS suggests but is not imlemented IIRC)</p>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
