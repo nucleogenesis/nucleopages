@@ -1,113 +1,111 @@
-<hr>
-<h2 id="title-setup-wizard-routing----browser-back-filename-setup-wizard-routing----browser-back-tags---tag-categories---category-date--lastmod">title: Setup Wizard Routing -- Browser Back
-fileName: setup wizard routing -- browser back
-tags:
-- tag
-categories:
-- category
-date: 
-lastMod: </h2>
-<h1 id="setupwizardindex"><code>SetupWizardIndex</code></h1>
-<ul>
-<li><p><code>synchronizeRouteAndMachine</code></p>
-<ul>
-<li><p>Called <code>(xstate) onTransition</code></p>
-</li>
-<li><p>Called during <code>created()</code></p>
-</li>
-<li><p><code>state</code> within this method refers to &quot;the machine at a moment in time&quot;</p>
-</li>
-<li><p>Initializes <code>Lockr...savedState</code> if it exists</p>
-</li>
-<li><p>The <code>vue-router</code> shaped <code>meta.route</code> property from the XState &quot;state node&quot; definition is pushed to the router.</p>
-</li>
-</ul>
-</li>
-<li><p><code>Lockr...savedState</code></p>
-<ul>
-<li><p>Is updated <code>(xstate) onTransition</code> with the machine&#39;s current state</p>
-</li>
-<li><p>Is read whenever the page is <code>created</code></p>
-</li>
-</ul>
-</li>
-</ul>
-<h1 id="handling-browser-back">Handling Browser Back</h1>
-<ul>
-<li><p><code>window.addEventListener(&quot;*&quot;, ...)</code> is not really ideal for our purposes. There is no way to know upfront if the user is going forward or backward.</p>
-</li>
-<li><p><code>vue-router</code> navigation guards can be used as a sort of middleware for tracking, reacting to and modifying however the user is attempting to navigate</p>
-</li>
-</ul>
-<h1 id="the-expected-flow">The expected flow</h1>
-<ul>
-<li><h2 id="user-initiates-change-of-route-via-buttons-in-ui">User initiates change of route via buttons in UI</h2>
-<ul>
-<li><p><code>wizardService</code> receives an event and transitions (or doesn&#39;t) accordingly</p>
-</li>
-<li><p>The <code>onTransition</code> handlers are fired off, resulting in:</p>
-<ul>
-<li><p><code>Lockr...savedState</code> being updated</p>
-</li>
-<li><p><code>synchronizeRouteAndMachine</code></p>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p> is called (and the user is rerouted)</p>
-<ul>
-<li><h2 id="user-initiates-change-of-route-via-browser-actions-forward-or-back">User initiates change of route via browser actions (Forward <strong>OR</strong> Back)</h2>
-<ul>
-<li><p><code>vue-router</code>moves the user to another <code>route</code></p>
-<ul>
-<li>This results in none of the transition business occurring as in the ## User initiates change of route via buttons in UI</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p> flow</p>
-<pre><code>+ ### Idea(s)
+<!-- directives: [] -->
+<div id="content">
+  <ul>
+    <li>
+      <p>
+        <br />
+</p>
+    </li>
+    <li>
+      <h1><code>SetupWizardIndex</code></h1>
+      <ul>
+        <li><code>synchronizeRouteAndMachine</code>
+          <ul>
+            <li>Called <code>(xstate) onTransition</code></li>
+            <li>Called during <code>created()</code></li>
+            <li><code>state</code> within this method refers to &quot;the machine at a moment in time&quot;</li>
+            <li>Initializes <code>Lockr...savedState</code> if it exists</li>
+            <li>The <code>vue-router</code> shaped <code>meta.route</code> property from the XState &quot;state node&quot; definition is pushed to the router.</li>
+          </ul>
+        </li>
+        <li><code>Lockr...savedState</code>
+          <ul>
+            <li>Is updated <code>(xstate) onTransition</code> with the machine&apos;s current state</li>
+            <li>Is read whenever the page is <code>created</code></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h1>Handling Browser Back</h1>
+      <ul>
+        <li><code>window.addEventListener(&quot;*&quot;, ...)</code> is not really ideal for our purposes. There is no way to know upfront if the user is going forward or backward.</li>
+        <li><code>vue-router</code> navigation guards can be used as a sort of middleware for tracking, reacting to and modifying however the user is attempting to navigate</li>
+      </ul>
+    </li>
+    <li>
+      <h1>The expected flow</h1>
+      <ul>
+        <li>
+          <h2>User initiates change of route via buttons in UI</h2>
+          <ul>
+            <li><code>wizardService</code> receives an event and transitions (or doesn&apos;t) accordingly</li>
+            <li>The <code>onTransition</code> handlers are fired off, resulting in:
+              <ul>
+                <li><code>Lockr...savedState</code> being updated</li>
+                <li><code>synchronizeRouteAndMachine</code> is called (and the user is rerouted)</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <h2>User initiates change of route via browser actions (Forward <b>OR</b> Back)</h2>
+          <ul>
+            <li><code>vue-router</code>moves the user to another <code>route</code>
+              <ul>
+                <li>This results in none of the transition business occurring as in the User initiates change of route via buttons in UI flow</li>
+              </ul>
+            </li>
+            <li>
+              <h3>Idea(s)</h3>
+              <ul>
+                <li>
+                  <h4>Inject the <code>wizardService</code> and logic into <code>$route.meta</code> on all routes</h4>
+                  <ul>
+                    <li>Start with expecting several new <code>$route.meta</code> properties:
+                      <ul>
+                        <li>1) <code>wizardRouted</code> - When true, indicates that the user has started the navigation via the UI</li>
+                        <li>2) <code>backEvent</code> - The event which we will send to the state machine if the user is using browser navigation</li>
+                        <li>3) <code>noBackAction</code> - This overrides whether we ever send the <code>backEvent</code> or not</li>
+                        <li>4) <code>wizardService</code> - The shared service used within the plugin</li>
+                      </ul>
+                    </li>
+                    <li>Update <code>synchronizeRouteAndMachine</code> to set <code>context.wizardRouted</code> to <code>true</code> every time before pushing the route</li>
+                    <li>With a <code>beforeRouteUpdate</code> guard in <code>SetupWizardIndex</code> we can ensure that <code>this.$route.meta.wizardService</code> is always set to the latest instance of <code>wizardService</code></li>
+                    <li>In a <code>beforeRouteEnter</code> in <code>OnboardingStepBase</code> we set <code>$route.meta.backEvent</code> and <code>$route.meta.noBackAction</code>to the value of the props of the same names given to that component</li>
+                    <li>In a global <code>beforeResolve</code> guard in <code>routes.js</code> we will now have the information we need to know
+                      <ul>
+                        <li>Ask what <code>$route.meta.noBackAction</code> is:
+                          <ul>
+                            <li><code>true</code> - We can just go <code>next(from)</code> from here I think as we will be preventing the navigation</li>
+                            <li><code>falsy</code> - We continue on</li>
+                          </ul>
+                        </li>
+                        <li>Ask what <code>$route.meta.wizardRouted</code> is:
+                          <ul>
+                            <li><code>undefined</code> ... <code>falsy</code> - Then we know we&apos;re navigating via means other than the UI
+                              <ul>
+                                <li>We send the machine the <code>$route.meta.backEvent</code>
+                                  <ul>
+                                    <li>This should then trigger <code>synchronizeRouteAndMachine</code>, which then triggers the proper route</li>
+                                    <li>OR We <code>next(to)</code> to ensure the updated route object is passed (without the <code>wizardRouted</code> property)</li>
+                                  </ul>
+                                </li>
+                              </ul>
+                            </li>
+                            <li><code>true</code> / <code>truthy</code> - Then we know the user has clicked the UI and that this route handling has been handled elsewhere (ie, we can just let the router continue to do its thing)</li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
 
-  + #### Inject the `wizardService` and logic into `$route.meta` on all routes
-
-    + Start with expecting several new `$route.meta` properties:
-
-      + 1) `wizardRouted` - When true, indicates that the user has started the navigation via the UI
-
-      + 2) `backEvent` - The event which we will send to the state machine if the user is using browser navigation
-
-      + 3) `noBackAction` - This overrides whether we ever send the `backEvent` or not
-
-      + 4) `wizardService` - The shared service used within the plugin
-
-    + Update `synchronizeRouteAndMachine`
-</code></pre>
-<p> to set <code>context.wizardRouted</code> to <code>true</code> every time before pushing the route</p>
-<pre><code>    + With a `beforeRouteUpdate` guard in `SetupWizardIndex` we can ensure that `this.$route.meta.wizardService` is always set to the latest instance of `wizardService`
-
-    + In a `beforeRouteEnter` in `OnboardingStepBase` we set `$route.meta.backEvent` and `$route.meta.noBackAction`to the value of the props of the same names given to that component
-
-    + In a global `beforeResolve` guard in `routes.js` we will now have the information we need to know
-
-      + Ask what `$route.meta.noBackAction` is:
-
-        + `true` - We can just go `next(from)` from here I think as we will be preventing the navigation
-
-        + `falsy` - We continue on
-
-      + Ask what `$route.meta.wizardRouted` is:
-
-        + `undefined` ... `falsy` - Then we know we&#39;re navigating via means other than the UI
-
-          + We send the machine the `$route.meta.backEvent`
-
-            + This should then trigger `synchronizeRouteAndMachine`
-</code></pre>
-<p>, which then triggers the proper route</p>
-<pre><code>            + OR We `next(to)` to ensure the updated route object is passed (without the `wizardRouted` property)
-
-        + `true` / `truthy` - Then we know the user has clicked the UI and that this route handling has been handled elsewhere (ie, we can just let the router continue to do its thing)
-</code></pre>
